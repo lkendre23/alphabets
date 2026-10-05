@@ -1,0 +1,662 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>ABC Learning Game</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body id="speakButton"
+                    onclick="speakCurrentItem()" class="min-h-screen bg-gradient-to-br from-blue-100 via-purple-100 to-pink-100">
+
+    <div class="max-w-6xl mx-auto px-4 py-8">
+
+        <!-- ================= HEADER ================= -->
+
+        <div class="text-center mb-8">
+
+            <h1 class="text-4xl md:text-5xl font-bold text-indigo-700">
+                ABC Learning Game
+            </h1>
+
+            <p class="text-gray-600 mt-3">
+                Click a letter or press A-Z on your keyboard
+            </p>
+
+        </div>
+
+
+        <!-- ================= ALPHABET ================= -->
+
+        <div
+            id="alphabetButtons"
+            class="flex flex-wrap justify-center gap-3 mb-10">
+        </div>
+
+
+        <!-- ================= CARD ================= -->
+
+        <div 
+            class="max-w-md mx-auto bg-white rounded-3xl shadow-2xl overflow-hidden">
+
+            <!-- Image -->
+
+            <img
+                id="itemImage"
+                src=""
+                alt=""
+                class="w-full h-72 object-cover"
+            >
+
+
+            <!-- Content -->
+
+            <div class="p-6 text-center">
+
+                <!-- Letter -->
+
+                <div
+                    id="letter"
+                    class="text-7xl font-extrabold text-indigo-600">
+                    A
+                </div>
+
+
+                <!-- Word -->
+
+                <h2
+                    id="itemText"
+                    class="text-3xl md:text-4xl font-bold text-gray-800 mt-2">
+                    A for Apple
+                </h2>
+
+
+                <!-- Description -->
+
+                <p
+                    id="description"
+                    class="text-gray-500 mt-3">
+                    Apple is a fruit.
+                </p>
+
+
+                <!-- Voice Button -->
+
+                <button
+                    
+                    class="mt-6 px-7 py-3 bg-green-500 hover:bg-green-600 text-white rounded-xl font-bold text-lg shadow-md transition transform hover:scale-105">
+
+                    🔊 Speak
+
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= NAVIGATION ================= -->
+
+        <div class="flex justify-center gap-4 mt-8">
+
+            <button
+                onclick="previousItem()"
+                class="px-6 py-3 bg-gray-700 hover:bg-gray-800 text-white rounded-xl font-semibold transition">
+
+                ← Previous
+
+            </button>
+
+
+            <button
+                onclick="nextItem()"
+                class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold transition">
+
+                Next →
+
+            </button>
+
+        </div>
+
+
+        <!-- ================= KEYBOARD HELP ================= -->
+
+        <div class="text-center mt-8">
+
+            <p class="text-gray-600 text-sm">
+                ⌨️ Press <b>A - Z</b> to select a letter
+            </p>
+
+            <p class="text-gray-500 text-sm mt-1">
+                ← → Navigate &nbsp; | &nbsp; Space 🔊 Speak
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ================= JAVASCRIPT ======================== -->
+    <!-- ===================================================== -->
+
+    <script>
+
+        /*
+        |--------------------------------------------------------------------------
+        | A-Z DATA
+        |--------------------------------------------------------------------------
+        */
+
+        const data = {
+
+            A: {
+                word: "Apple",
+                description: "Apple is a fruit.",
+                image: "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=800"
+            },
+
+            B: {
+                word: "Ball",
+                description: "A ball is used for playing.",
+                image: "https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=800"
+            },
+
+            C: {
+                word: "Cat",
+                description: "A cat is a pet animal.",
+                image: "https://images.unsplash.com/photo-1519052537078-e6302a4968d4?w=800"
+            },
+
+            D: {
+                word: "Dog",
+                description: "A dog is a friendly animal.",
+                image: "https://images.unsplash.com/photo-1517849845537-4d257902454a?w=800"
+            },
+
+            E: {
+                word: "Elephant",
+                description: "An elephant is a large animal.",
+                image: "https://images.unsplash.com/photo-1557050543-4d5f4e07ef46?w=800"
+            },
+
+            F: {
+                word: "Fish",
+                description: "Fish live in water.",
+                image: "https://images.unsplash.com/photo-1524704654690-b56c05c78a00?w=800"
+            },
+
+            G: {
+                word: "Giraffe",
+                description: "A giraffe has a very long neck.",
+                image: "https://images.unsplash.com/photo-1547721064-da6cfb341d50?w=800"
+            },
+
+            H: {
+                word: "Horse",
+                description: "A horse is a strong animal.",
+                image: "https://images.unsplash.com/photo-1553284965-83fd3e82fa5a?w=800"
+            },
+
+            I: {
+                word: "Ice Cream",
+                description: "Ice cream is a cold sweet food.",
+                image: "https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=800"
+            },
+
+            J: {
+                word: "Juice",
+                description: "Juice is a drink made from fruits.",
+                image: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=800"
+            },
+
+            K: {
+                word: "Kite",
+                description: "A kite flies in the sky.",
+                image: "https://images.unsplash.com/photo-1520975958225-7b7c4c8c7e5e?w=800"
+            },
+
+            L: {
+                word: "Lion",
+                description: "A lion is a wild animal.",
+                image: "https://images.unsplash.com/photo-1546182990-dffeafbe841d?w=800"
+            },
+
+            M: {
+                word: "Monkey",
+                description: "A monkey is an active animal.",
+                image: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800"
+            },
+
+            N: {
+                word: "Nest",
+                description: "Birds build nests.",
+                image: "https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?w=800"
+            },
+
+            O: {
+                word: "Orange",
+                description: "An orange is a citrus fruit.",
+                image: "https://images.unsplash.com/photo-1547514701-42782101795e?w=800"
+            },
+
+            P: {
+                word: "Parrot",
+                description: "A parrot is a colorful bird.",
+                image: "https://images.unsplash.com/photo-1552728089-57bdde30beb3?w=800"
+            },
+
+            Q: {
+                word: "Queen",
+                description: "A queen is a female ruler.",
+                image: "https://images.unsplash.com/photo-1580655653885-65763b2597d0?w=800"
+            },
+
+            R: {
+                word: "Rabbit",
+                description: "A rabbit is a small animal.",
+                image: "https://images.unsplash.com/photo-1585110396000-c9ffd4e4b308?w=800"
+            },
+
+            S: {
+                word: "Sun",
+                description: "The sun gives us light and heat.",
+                image: "https://images.unsplash.com/photo-1500534623283-312aade485b7?w=800"
+            },
+
+            T: {
+                word: "Tiger",
+                description: "A tiger is a wild animal.",
+                image: "https://images.unsplash.com/photo-1561731216-c3a4d99437d5?w=800"
+            },
+
+            U: {
+                word: "Umbrella",
+                description: "An umbrella protects us from rain.",
+                image: "https://images.unsplash.com/photo-1553218372-4e3c6e4e3e89?w=800"
+            },
+
+            V: {
+                word: "Van",
+                description: "A van is a type of vehicle.",
+                image: "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800"
+            },
+
+            W: {
+                word: "Watch",
+                description: "A watch tells us the time.",
+                image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=800"
+            },
+
+            X: {
+                word: "Xylophone",
+                description: "A xylophone is a musical instrument.",
+                image: "https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=800"
+            },
+
+            Y: {
+                word: "Yo-Yo",
+                description: "A yo-yo is a toy.",
+                image: "https://images.unsplash.com/photo-1596461404969-9ae70f2830c1?w=800"
+            },
+
+            Z: {
+                word: "Zebra",
+                description: "A zebra has black and white stripes.",
+                image: "https://images.unsplash.com/photo-1501706362039-c6e80948b0e8?w=800"
+            }
+
+        };
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VARIABLES
+        |--------------------------------------------------------------------------
+        */
+
+        const letters = Object.keys(data);
+
+        let currentIndex = 0;
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | DOM ELEMENTS
+        |--------------------------------------------------------------------------
+        */
+
+        const alphabetButtons =
+            document.getElementById("alphabetButtons");
+
+        const itemImage =
+            document.getElementById("itemImage");
+
+        const letterElement =
+            document.getElementById("letter");
+
+        const itemText =
+            document.getElementById("itemText");
+
+        const description =
+            document.getElementById("description");
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | CREATE A-Z BUTTONS
+        |--------------------------------------------------------------------------
+        */
+
+        letters.forEach((letter, index) => {
+
+            const button = document.createElement("button");
+
+            button.innerText = letter;
+
+            button.dataset.letter = letter;
+
+            button.className = `
+                w-12
+                h-12
+                md:w-14
+                md:h-14
+                rounded-xl
+                bg-white
+                text-indigo-600
+                font-bold
+                text-xl
+                shadow-md
+                hover:bg-indigo-600
+                hover:text-white
+                hover:scale-110
+                transition
+            `;
+
+            button.addEventListener("click", function () {
+
+                currentIndex = index;
+
+                showItem();
+
+            });
+
+            alphabetButtons.appendChild(button);
+
+        });
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | SHOW ITEM
+        |--------------------------------------------------------------------------
+        */
+
+        function showItem() {
+
+            const letter = letters[currentIndex];
+
+            const item = data[letter];
+
+
+            // Letter
+
+            letterElement.innerText = letter;
+
+
+            // Word
+
+            itemText.innerText =
+                `${letter} for ${item.word}`;
+
+
+            // Description
+
+            description.innerText =
+                item.description;
+
+
+            // Image
+
+            itemImage.src =
+                item.image;
+
+            itemImage.alt =
+                item.word;
+
+
+            // Highlight selected button
+
+            updateActiveButton();
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | ACTIVE BUTTON
+        |--------------------------------------------------------------------------
+        */
+
+        function updateActiveButton() {
+
+            const buttons =
+                alphabetButtons.querySelectorAll("button");
+
+            buttons.forEach((button, index) => {
+
+                if (index === currentIndex) {
+
+                    button.classList.remove(
+                        "bg-white",
+                        "text-indigo-600"
+                    );
+
+                    button.classList.add(
+                        "bg-indigo-600",
+                        "text-white",
+                        "scale-110"
+                    );
+
+                } else {
+
+                    button.classList.remove(
+                        "bg-indigo-600",
+                        "text-white",
+                        "scale-110"
+                    );
+
+                    button.classList.add(
+                        "bg-white",
+                        "text-indigo-600"
+                    );
+
+                }
+
+            });
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | VOICE
+        |--------------------------------------------------------------------------
+        */
+
+        function speakCurrentItem() {
+
+            const letter =
+                letters[currentIndex];
+
+            const item =
+                data[letter];
+
+
+            // Stop previous voice
+
+            window.speechSynthesis.cancel();
+
+
+            // Create speech
+
+            const speech =
+                new SpeechSynthesisUtterance(
+                    `${letter} for ${item.word}`
+                );
+
+
+            // Voice settings
+
+            speech.lang = "en-US";
+
+            speech.rate = 0.75;
+
+            speech.pitch = 1.1;
+
+            speech.volume = 1;
+
+
+            // Speak
+
+            window.speechSynthesis.speak(speech);
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | NEXT
+        |--------------------------------------------------------------------------
+        */
+
+        function nextItem() {
+
+            currentIndex++;
+
+            if (currentIndex >= letters.length) {
+
+                currentIndex = 0;
+
+            }
+
+            showItem();
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | PREVIOUS
+        |--------------------------------------------------------------------------
+        */
+
+        function previousItem() {
+
+            currentIndex--;
+
+            if (currentIndex < 0) {
+
+                currentIndex = letters.length - 1;
+
+            }
+
+            showItem();
+
+        }
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | KEYBOARD SUPPORT
+        |--------------------------------------------------------------------------
+        */
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                const key =
+                    event.key.toUpperCase();
+
+
+                /*
+                | A-Z
+                */
+
+                if (data[key]) {
+
+                    currentIndex =
+                        letters.indexOf(key);
+
+                    showItem();
+
+                    return;
+
+                }
+
+
+                /*
+                | Arrow Right
+                */
+
+                if (event.key === "ArrowRight") {
+
+                    nextItem();
+
+                    return;
+
+                }
+
+
+                /*
+                | Arrow Left
+                */
+
+                if (event.key === "ArrowLeft") {
+
+                    previousItem();
+
+                    return;
+
+                }
+
+
+                /*
+                | Space = Speak
+                */
+
+                if (event.code === "Space") {
+
+                    event.preventDefault();
+
+                    speakCurrentItem();
+
+                    return;
+
+                }
+
+            }
+        );
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | INITIAL LOAD
+        |--------------------------------------------------------------------------
+        */
+
+        showItem();
+
+    </script>
+
+</body>
+
+</html>
+```
